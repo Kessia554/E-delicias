@@ -1,0 +1,891 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>E-Delícias - E-books de Confeitaria para Iniciantes</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Pacifico&display=swap');
+        
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color:  #0ABAB5;
+        }
+        
+        .logo-font {
+            font-family: 'Pacifico', cursive;
+        }
+        
+        /* Updated color palette */
+        .bg-primary {
+            background-color: #ff0080; /* Hot Pink */
+        }
+        
+        .bg-secondary {
+            background-color: #0ABAB5; /* Tiffany Blue */
+        }
+        
+        .text-primary {
+            color: #ff0080;
+        }
+        
+        .text-secondary {
+            color: #0ABAB5;
+        }
+        
+        .border-primary {
+            border-color: #ff0080;
+        }
+        
+        .border-secondary {
+            border-color: #0ABAB5;
+        }
+        
+        .btn-primary {
+            background-color: #0ABAB5;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary:hover {
+            background-color: #ff0080;
+            transform: translateY(-2px);
+        }
+        
+        .btn-secondary {
+            background-color: #0ABAB5;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-secondary:hover {
+            background-color: #089c98;
+            transform: translateY(-2px);
+        }
+        
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+        
+        .product-card {
+            transition: all 0.3s ease;
+        }
+        
+        .floating {
+            animation: floating 6s ease-in-out infinite;
+        }
+        
+        @keyframes floating {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-15px); }
+            100% { transform: translateY(0px); }
+        }
+        
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        /* Modal styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 50;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.4);
+        }
+        
+        .modal-content {
+            background-color: #fefefe;
+            margin: 10% auto;
+            padding: 20px;
+            border-radius: 12px;
+            width: 80%;
+            max-width: 500px;
+        }
+        
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        
+        .close:hover {
+            color: black;
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+    <!-- Header -->
+    <header class="bg-primary text-white shadow-lg">
+        <div class="container mx-auto px-4 py-4">
+            <div class="flex justify-between items-center">
+                <div class="flex items-center space-x-2">
+                    <i class="fas fa-cookie-bite text-3xl"></i>
+                    <h1 class="text-2xl font-bold logo-font">E-Delícias</h1>
+                </div>
+                <nav class="hidden md:flex space-x-6 items-center">
+                    <a href="#inicio" class="hover:text-pink-200 transition">Início</a>
+                    <a href="#ebooks" class="hover:text-pink-200 transition">E-books</a>
+                    <a href="#dicas" class="hover:text-pink-200 transition">Dicas</a>
+                    <a href="#sobre" class="hover:text-pink-200 transition">Sobre</a>
+                    <button id="loginBtn" class="bg-white text-primary px-4 py-2 rounded-lg font-semibold hover:bg-pink-50 transition">
+                        <i class="fas fa-user mr-2"></i>Login
+                    </button>
+                    <button id="cartBtn" class="relative">
+                        <i class="fas fa-shopping-cart text-2xl"></i>
+                        <span id="cartCount" class="absolute -top-2 -right-2 bg-white text-primary text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">0</span>
+                    </button>
+                </nav>
+                <button class="md:hidden text-xl" id="mobileMenuBtn">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+        </div>
+        
+        <!-- Mobile Menu -->
+        <div id="mobileMenu" class="hidden md:hidden bg-pink-100 px-4 py-2">
+            <div class="flex flex-col space-y-3">
+                <a href="#inicio" class="hover:text-pink-700 transition">Início</a>
+                <a href="#ebooks" class="hover:text-pink-700 transition">E-books</a>
+                <a href="#dicas" class="hover:text-pink-700 transition">Dicas</a>
+                <a href="#sobre" class="hover:text-pink-700 transition">Sobre</a>
+                <div class="flex space-x-4 pt-2">
+                    <button id="loginBtnMobile" class="bg-white text-primary px-4 py-2 rounded-lg font-semibold hover:bg-pink-50 transition text-sm">
+                        <i class="fas fa-user mr-2"></i>Login
+                    </button>
+                    <button id="cartBtnMobile" class="relative bg-white text-primary px-4 py-2 rounded-lg font-semibold hover:bg-pink-50 transition text-sm">
+                        <i class="fas fa-shopping-cart mr-2"></i>Carrinho
+                        <span id="cartCountMobile" class="absolute -top-2 -right-2 bg-primary text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">0</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section id="inicio" class="relative h-screen max-h-[800px] overflow-hidden bg-gradient-to-r from-primary to-secondary">
+        <!-- Imagem de fundo cobrindo toda a tela -->
+        <img src="https://github.com/Kessia554/blogpessoal/blob/main/600.jpg?raw=true" 
+             alt="Confeitaria" 
+             class="absolute inset-0 w-full h-full object-cover">
+      
+        <!-- Camada de escurecimento -->
+        <div class="absolute inset-0 bg-black opacity-20"></div>
+      
+        <!-- Conteúdo -->
+        <div class="relative z-10 h-full flex flex-col justify-center items-center text-center px-4">
+          <h1 class="text-4xl md:text-6xl font-bold text-white mb-4 logo-font">E-Delícias</h1>
+          <p class="text-xl md:text-2xl text-white mb-8 max-w-3xl">E-books de confeitaria para iniciantes e empreendedores</p>
+          <a href="#ebooks" class="btn-primary text-white px-8 py-3 rounded-full font-semibold text-lg shadow-lg pulse">
+            Conheça nossos e-books <i class="fas fa-arrow-down ml-2"></i>
+          </a>
+        </div>
+      </section>
+      
+      
+    <!-- E-books Section -->
+    <section id="ebooks" class="py-16 bg-white">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl md:text-4xl font-bold text-gray-800 mb-4">Nossos E-books</h2>
+                <p class="text-gray-600 max-w-2xl mx-auto">Receitas testadas e aprovadas para você começar na confeitaria</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                <!-- E-book 1 -->
+                <div class="product-card bg-white rounded-xl overflow-hidden shadow-lg border border-gray-100">
+                    <div class="relative h-48 overflow-hidden">
+                        <img src="https://cdn11.bigcommerce.com/s-ham8sjk/product_images/uploaded_images/brigadeiro-brazilian-chocolates.jpg" 
+                             alt="Doces para Festas" class="w-full h-full object-cover">
+                        <div class="absolute top-2 right-2 bg-primary text-white px-2 py-1 rounded-full text-xs font-bold">
+                            Mais vendido
+                        </div>
+                    </div>
+                    <div class="p-4">
+                        <h3 class="font-bold text-lg mb-2">Doces para Festas</h3>
+                        <p class="text-gray-600 text-sm mb-4">50 receitas de doces simples para festas infantis e eventos</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-primary font-bold text-xl">R$ 29,90</span>
+                            <button class="btn-primary text-white px-4 py-2 rounded-lg font-semibold text-sm add-to-cart" data-id="1" data-name="Doces para Festas" data-price="29.90">
+                                <i class="fas fa-cart-plus mr-1"></i> Comprar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- E-book 2 -->
+                <div class="product-card bg-white rounded-xl overflow-hidden shadow-lg border border-gray-100">
+                    <div class="relative h-48 overflow-hidden">
+                        <img src="https://th.bing.com/th/id/OIP.sZ2OxtEEI-YNPheD3DPjPQHaHa?rs=1&pid=ImgDetMain" 
+                             alt="Bolo Perfeito" class="w-full h-full object-cover">
+                    </div>
+                    <div class="p-4">
+                        <h3 class="font-bold text-lg mb-2">Bolo Perfeito</h3>
+                        <p class="text-gray-600 text-sm mb-4">Técnicas e receitas para bolos incríveis em casa</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-primary font-bold text-xl">R$ 24,90</span>
+                            <button class="btn-primary text-white px-4 py-2 rounded-lg font-semibold text-sm add-to-cart" data-id="2" data-name="Bolo Perfeito" data-price="24.90">
+                                <i class="fas fa-cart-plus mr-1"></i> Comprar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- E-book 3 -->
+                <div class="product-card bg-white rounded-xl overflow-hidden shadow-lg border border-gray-100">
+                    <div class="relative h-48 overflow-hidden">
+                        <img src="https://anamariabraga.globo.com/wp-content/uploads/2018/01/doces-veganos.jpg" 
+                             alt="Confeitaria Vegana" class="w-full h-full object-cover">
+                    </div>
+                    <div class="p-4">
+                        <h3 class="font-bold text-lg mb-2">Confeitaria Vegana</h3>
+                        <p class="text-gray-600 text-sm mb-4">Doces sem ingredientes de origem animal</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-primary font-bold text-xl">R$ 34,90</span>
+                            <button class="btn-primary text-white px-4 py-2 rounded-lg font-semibold text-sm add-to-cart" data-id="3" data-name="Confeitaria Vegana" data-price="34.90">
+                                <i class="fas fa-cart-plus mr-1"></i> Comprar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- E-book 4 -->
+                <div class="product-card bg-white rounded-xl overflow-hidden shadow-lg border border-gray-100">
+                    <div class="relative h-48 overflow-hidden">
+                        <img src="https://irp.cdn-website.com/33406c6e/dms3rep/multi/doces+de+confeitaria.jpg" 
+                             alt="Empreendedorismo Doce" class="w-full h-full object-cover">
+                        <div class="absolute top-2 right-2 bg-secondary text-white px-2 py-1 rounded-full text-xs font-bold">
+                            Novo
+                        </div>
+                    </div>
+                    <div class="p-4">
+                        <h3 class="font-bold text-lg mb-2">Empreendedorismo Doce</h3>
+                        <p class="text-gray-600 text-sm mb-4">Guia completo para começar seu negócio de doces</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-primary font-bold text-xl">R$ 39,90</span>
+                            <button class="btn-primary text-white px-4 py-2 rounded-lg font-semibold text-sm add-to-cart" data-id="4" data-name="Empreendedorismo Doce" data-price="39.90">
+                                <i class="fas fa-cart-plus mr-1"></i> Comprar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Dicas Section -->
+    <section id="dicas" class="py-16 bg-pink-50">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl md:text-4xl font-bold text-gray-800 mb-4">Dicas para Começar</h2>
+                <p class="text-gray-600 max-w-2xl mx-auto">Conselhos práticos para empreender na confeitaria</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition">
+                    <div class="bg-primary bg-opacity-20 p-4 rounded-full w-16 h-16 flex items-center justify-center mb-4 mx-auto">
+                        <i class="fas fa-utensils text-primary text-2xl"></i>
+                    </div>
+                    <h3 class="font-semibold text-center mb-2">Equipamentos Básicos</h3>
+                    <p class="text-gray-600 text-center">Saiba quais são os utensílios essenciais para começar sem gastar muito</p>
+                </div>
+                
+                <div class="bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition">
+                    <div class="bg-primary bg-opacity-20 p-4 rounded-full w-16 h-16 flex items-center justify-center mb-4 mx-auto">
+                        <i class="fas fa-calculator text-primary text-2xl"></i>
+                    </div>
+                    <h3 class="font-semibold text-center mb-2">Precificação</h3>
+                    <p class="text-gray-600 text-center">Como calcular o preço dos seus doces para ter lucro</p>
+                </div>
+                
+                <div class="bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition">
+                    <div class="bg-primary bg-opacity-20 p-4 rounded-full w-16 h-16 flex items-center justify-center mb-4 mx-auto">
+                        <i class="fas fa-camera text-primary text-2xl"></i>
+                    </div>
+                    <h3 class="font-semibold text-center mb-2">Fotos Atraentes</h3>
+                    <p class="text-gray-600 text-center">Dicas para fotografar seus doces e vender mais</p>
+                </div>
+                
+                <div class="bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition">
+                    <div class="bg-primary bg-opacity-20 p-4 rounded-full w-16 h-16 flex items-center justify-center mb-4 mx-auto">
+                        <i class="fas fa-hashtag text-primary text-2xl"></i>
+                    </div>
+                    <h3 class="font-semibold text-center mb-2">Marketing Digital</h3>
+                    <p class="text-gray-600 text-center">Como usar redes sociais para divulgar seus doces</p>
+                </div>
+                
+                <div class="bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition">
+                    <div class="bg-primary bg-opacity-20 p-4 rounded-full w-16 h-16 flex items-center justify-center mb-4 mx-auto">
+                        <i class="fas fa-box-open text-primary text-2xl"></i>
+                    </div>
+                    <h3 class="font-semibold text-center mb-2">Embalagens</h3>
+                    <p class="text-gray-600 text-center">Ideias criativas para embalar seus doces com baixo custo</p>
+                </div>
+                
+                <div class="bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition">
+                    <div class="bg-primary bg-opacity-20 p-4 rounded-full w-16 h-16 flex items-center justify-center mb-4 mx-auto">
+                        <i class="fas fa-users text-primary text-2xl"></i>
+                    </div>
+                    <h3 class="font-semibold text-center mb-2">Atendimento</h3>
+                    <p class="text-gray-600 text-center">Como encantar seus clientes e fidelizá-los</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sobre Section -->
+    <section id="sobre" class="py-16 bg-white">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-col md:flex-row items-center gap-12">
+                <div class="md:w-1/2 relative">
+                    <img src="https://github.com/Kessia554/blogpessoal/blob/main/IMG-20250501-WA0057.jpg?raw=true" 
+                         alt="Sobre a E-Delícias" class="rounded-xl shadow-lg w-full floating">
+                    <div class="absolute -bottom-6 -right-6 bg-secondary p-4 rounded-xl shadow-lg">
+                        <i class="fas fa-heart text-4xl text-white"></i>
+                    </div>
+                </div>
+                
+                <div class="md:w-1/2">
+                    <h2 class="text-3xl md:text-4xl font-bold text-gray-800 mb-4">Sobre a E-Delícias</h2>
+                    <p class="text-gray-600 mb-4">Bem-vinda ao E-Delícias!
+
+                        Aqui, a doçura vai muito além das receitas. O E-Delícias nasceu para inspirar e transformar vidas por meio da confeitaria artesanal. Nosso espaço é feito para você que sonha em empreender, se aperfeiçoar na cozinha ou encontrar um novo caminho cheio de sabor e criatividade.
+                        
+                        Oferecemos cursos, dicas, conteúdos exclusivos e muito incentivo para que mães, mulheres e apaixonados pela confeitaria desenvolvam suas habilidades e criem negócios incríveis, com afeto e profissionalismo.
+                        
+                        Explore nossas receitas, conheça nossos cursos e venha fazer parte dessa comunidade que cresce com amor, dedicação e… um toque de brigadeiro na colher!
+                        
+                        E-Delícias: confeitaria com propósito, para transformar vidas.</p>
+                    
+                    
+                   
+                    
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Newsletter -->
+    <section class="py-16 bg-gradient-to-r from-primary to-secondary text-white">
+        <div class="container mx-auto px-4">
+            <div class="max-w-4xl mx-auto text-center">
+                <h2 class="text-3xl md:text-4xl font-bold mb-6 logo-font">Receba Novidades</h2>
+                <p class="text-xl mb-8">Cadastre-se para receber receitas gratuitas, promoções e dicas exclusivas</p>
+                
+                <div class="flex flex-col md:flex-row gap-4 max-w-xl mx-auto">
+                    <input type="email" placeholder="Seu melhor e-mail" class="flex-grow px-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-300 text-gray-800">
+                    <button class="bg-white text-primary px-6 py-3 rounded-lg font-semibold hover:bg-pink-50 transition">
+                        Cadastrar <i class="fas fa-paper-plane ml-2"></i>
+                    </button>
+                </div>
+                
+                <p class="text-sm text-pink-100 mt-4">Respeitamos sua privacidade. Pode cancelar quando quiser.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white py-12">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div>
+                    <div class="flex items-center space-x-2 mb-4">
+                        <i class="fas fa-cookie-bite text-2xl text-primary"></i>
+                        <h3 class="text-xl font-bold logo-font">E-Delícias</h3>
+                    </div>
+                    <p class="text-gray-400">E-books de confeitaria para iniciantes e empreendedores.</p>
+                    <div class="flex space-x-4 mt-4">
+                        <a href="#" class="text-gray-400 hover:text-primary transition"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-primary transition"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-primary transition"><i class="fab fa-pinterest-p"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-primary transition"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+                
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">E-books</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">Doces para Festas</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">Bolo Perfeito</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">Confeitaria Vegana</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">Empreendedorismo</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">Ajuda</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">Como comprar</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">Formas de pagamento</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">Entrega</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">Perguntas frequentes</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">Contato</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-white transition"><i class="fas fa-envelope mr-2"></i> contato@edelicias.com</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition"><i class="fas fa-phone mr-2"></i> (48) 98765-4321</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition"><i class="fas fa-map-marker-alt mr-2"></i> Santa Catarina, SC</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="border-t border-gray-800 mt-12 pt-8 text-center text-gray-400">
+                <p>&copy; 2023 E-Delícias. Todos os direitos reservados.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Login Modal -->
+    <div id="loginModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2 class="text-2xl font-bold mb-6 text-center">Login</h2>
+            
+            <form id="loginForm" class="space-y-4">
+                <div>
+                    <label for="loginEmail" class="block text-gray-700 mb-2">E-mail</label>
+                    <input type="email" id="loginEmail" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary">
+                </div>
+                
+                <div>
+                    <label for="loginPassword" class="block text-gray-700 mb-2">Senha</label>
+                    <input type="password" id="loginPassword" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary">
+                </div>
+                
+                <button type="submit" class="btn-primary text-white w-full py-2 rounded-lg font-semibold">
+                    Entrar <i class="fas fa-sign-in-alt ml-2"></i>
+                </button>
+                
+                <p class="text-center text-gray-600">Não tem conta? <a href="#" id="showRegisterBtn" class="text-primary font-semibold">Cadastre-se</a></p>
+            </form>
+        </div>
+    </div>
+
+    <!-- Register Modal -->
+    <div id="registerModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2 class="text-2xl font-bold mb-6 text-center">Cadastro</h2>
+            
+            <form id="registerForm" class="space-y-4">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label for="firstName" class="block text-gray-700 mb-2">Nome</label>
+                        <input type="text" id="firstName" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary">
+                    </div>
+                    
+                    <div>
+                        <label for="lastName" class="block text-gray-700 mb-2">Sobrenome</label>
+                        <input type="text" id="lastName" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary">
+                    </div>
+                </div>
+                
+                <div>
+                    <label for="email" class="block text-gray-700 mb-2">E-mail</label>
+                    <input type="email" id="email" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary">
+                </div>
+                
+                <div>
+                    <label for="password" class="block text-gray-700 mb-2">Senha</label>
+                    <input type="password" id="password" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary">
+                </div>
+                
+                <div>
+                    <label for="phone" class="block text-gray-700 mb-2">Telefone</label>
+                    <input type="tel" id="phone" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary">
+                </div>
+                
+                <div>
+                    <label for="address" class="block text-gray-700 mb-2">Endereço</label>
+                    <input type="text" id="address" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary">
+                </div>
+                
+                <div>
+                    <label for="complement" class="block text-gray-700 mb-2">Complemento</label>
+                    <input type="text" id="complement" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary">
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div>
+                        <label for="city" class="block text-gray-700 mb-2">Cidade</label>
+                    <input type="text" id="city" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary">
+                </div>
+                
+                <div>
+                    <label for="state" class="block text-gray-700 mb-2">Estado</label>
+                    <select id="state" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary">
+                        <option value="">Selecione</option>
+                        <option value="AC">Acre</option>
+                        <option value="AL">Alagoas</option>
+                        <option value="AP">Amapá</option>
+                        <option value="AM">Amazonas</option>
+                        <option value="BA">Bahia</option>
+                        <option value="CE">Ceará</option>
+                        <option value="DF">Distrito Federal</option>
+                        <option value="ES">Espírito Santo</option>
+                        <option value="GO">Goiás</option>
+                        <option value="MA">Maranhão</option>
+                        <option value="MT">Mato Grosso</option>
+                        <option value="MS">Mato Grosso do Sul</option>
+                        <option value="MG">Minas Gerais</option>
+                        <option value="PA">Pará</option>
+                        <option value="PB">Paraíba</option>
+                        <option value="PR">Paraná</option>
+                        <option value="PE">Pernambuco</option>
+                        <option value="PI">Piauí</option>
+                        <option value="RJ">Rio de Janeiro</option>
+                        <option value="RN">Rio Grande do Norte</option>
+                        <option value="RS">Rio Grande do Sul</option>
+                        <option value="RO">Rondônia</option>
+                        <option value="RR">Roraima</option>
+                        <option value="SC">Santa Catarina</option>
+                        <option value="SP">São Paulo</option>
+                        <option value="SE">Sergipe</option>
+                        <option value="TO">Tocantins</option>
+                    </select>
+                </div>
+                
+                <div>
+                    <label for="zipCode" class="block text-gray-700 mb-2">CEP</label>
+                    <input type="text" id="zipCode" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary">
+                </div>
+            </div>
+            
+            <button type="submit" class="btn-primary text-white w-full py-2 rounded-lg font-semibold">
+                Cadastrar <i class="fas fa-user-plus ml-2"></i>
+            </button>
+            
+            <p class="text-center text-gray-600">Já tem conta? <a href="#" id="showLoginBtn" class="text-primary font-semibold">Faça login</a></p>
+        </form>
+    </div>
+</div>
+
+<!-- Cart Modal -->
+<div id="cartModal" class="modal">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <h2 class="text-2xl font-bold mb-6 text-center">Seu Carrinho</h2>
+        
+        <div id="cartItems" class="space-y-4 mb-6">
+            <!-- Cart items will be added here dynamically -->
+            <p class="text-center text-gray-500 py-8">Seu carrinho está vazio</p>
+        </div>
+        
+        <div class="border-t border-gray-200 pt-4 mb-4">
+            <div class="flex justify-between mb-2">
+                <span class="font-semibold">Subtotal:</span>
+                <span id="cartSubtotal">R$ 0,00</span>
+            </div>
+            
+            <div class="flex items-center mb-4">
+                <input type="text" id="couponCode" placeholder="Código de cupom" class="flex-grow px-4 py-2 border border-gray-300 rounded-l-lg focus:outline-none focus:ring-2 focus:ring-primary">
+                <button id="applyCouponBtn" class="bg-gray-200 text-gray-700 px-4 py-2 rounded-r-lg hover:bg-gray-300 transition">
+                    Aplicar
+                </button>
+            </div>
+            
+            <div class="flex justify-between font-bold text-lg">
+                <span>Total:</span>
+                <span id="cartTotal">R$ 0,00</span>
+            </div>
+        </div>
+        
+        <div class="mb-4">
+            <h3 class="font-semibold mb-2">Forma de pagamento</h3>
+            <div class="grid grid-cols-3 gap-2">
+                <button class="payment-method border border-gray-300 py-2 rounded-lg hover:bg-gray-100 transition" data-method="pix">
+                    <i class="fas fa-qrcode text-2xl mb-1"></i>
+                    <span class="text-xs">PIX</span>
+                </button>
+                <button class="payment-method border border-gray-300 py-2 rounded-lg hover:bg-gray-100 transition" data-method="boleto">
+                    <i class="fas fa-barcode text-2xl mb-1"></i>
+                    <span class="text-xs">Boleto</span>
+                </button>
+                <button class="payment-method border border-gray-300 py-2 rounded-lg hover:bg-gray-100 transition" data-method="cartao">
+                    <i class="far fa-credit-card text-2xl mb-1"></i>
+                    <span class="text-xs">Cartão</span>
+                </button>
+            </div>
+        </div>
+        
+        <button id="checkoutBtn" class="btn-primary text-white w-full py-3 rounded-lg font-semibold">
+            Finalizar Compra <i class="fas fa-shopping-bag ml-2"></i>
+        </button>
+    </div>
+</div>
+
+<script>
+    // Mobile menu toggle
+    const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+    const mobileMenu = document.getElementById('mobileMenu');
+    
+    mobileMenuBtn.addEventListener('click', function() {
+        mobileMenu.classList.toggle('hidden');
+    });
+    
+    // Modal functionality
+    const loginModal = document.getElementById('loginModal');
+    const registerModal = document.getElementById('registerModal');
+    const cartModal = document.getElementById('cartModal');
+    
+    const loginBtn = document.getElementById('loginBtn');
+    const loginBtnMobile = document.getElementById('loginBtnMobile');
+    const showRegisterBtn = document.getElementById('showRegisterBtn');
+    const showLoginBtn = document.getElementById('showLoginBtn');
+    const cartBtn = document.getElementById('cartBtn');
+    const cartBtnMobile = document.getElementById('cartBtnMobile');
+    
+    const closeButtons = document.querySelectorAll('.close');
+    
+    // Open modals
+    loginBtn.addEventListener('click', function() {
+        loginModal.style.display = 'block';
+    });
+    
+    loginBtnMobile.addEventListener('click', function() {
+        loginModal.style.display = 'block';
+    });
+    
+    showRegisterBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        loginModal.style.display = 'none';
+        registerModal.style.display = 'block';
+    });
+    
+    showLoginBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        registerModal.style.display = 'none';
+        loginModal.style.display = 'block';
+    });
+    
+    cartBtn.addEventListener('click', function() {
+        cartModal.style.display = 'block';
+        updateCartDisplay();
+    });
+    
+    cartBtnMobile.addEventListener('click', function() {
+        cartModal.style.display = 'block';
+        updateCartDisplay();
+    });
+    
+    // Close modals
+    closeButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            loginModal.style.display = 'none';
+            registerModal.style.display = 'none';
+            cartModal.style.display = 'none';
+        });
+    });
+    
+    // Close when clicking outside modal
+    window.addEventListener('click', function(event) {
+        if (event.target == loginModal) {
+            loginModal.style.display = 'none';
+        }
+        if (event.target == registerModal) {
+            registerModal.style.display = 'none';
+        }
+        if (event.target == cartModal) {
+            cartModal.style.display = 'none';
+        }
+    });
+    
+    // Form submissions
+    document.getElementById('loginForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        alert('Login realizado com sucesso!');
+        loginModal.style.display = 'none';
+    });
+    
+    document.getElementById('registerForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        alert('Cadastro realizado com sucesso!');
+        registerModal.style.display = 'none';
+    });
+    
+    // Cart functionality
+    let cart = [];
+    
+    // Add to cart buttons
+    document.querySelectorAll('.add-to-cart').forEach(button => {
+        button.addEventListener('click', function() {
+            const id = this.getAttribute('data-id');
+            const name = this.getAttribute('data-name');
+            const price = parseFloat(this.getAttribute('data-price'));
+            
+            // Check if item already in cart
+            const existingItem = cart.find(item => item.id === id);
+            
+            if (existingItem) {
+                existingItem.quantity += 1;
+            } else {
+                cart.push({
+                    id,
+                    name,
+                    price,
+                    quantity: 1
+                });
+            }
+            
+            updateCartCount();
+            updateCartDisplay();
+            
+            // Show cart modal
+            cartModal.style.display = 'block';
+        });
+    });
+    
+    // Update cart count in header
+    function updateCartCount() {
+        const count = cart.reduce((total, item) => total + item.quantity, 0);
+        document.getElementById('cartCount').textContent = count;
+        document.getElementById('cartCountMobile').textContent = count;
+    }
+    
+    // Update cart display in modal
+    function updateCartDisplay() {
+        const cartItems = document.getElementById('cartItems');
+        const cartSubtotal = document.getElementById('cartSubtotal');
+        const cartTotal = document.getElementById('cartTotal');
+        
+        if (cart.length === 0) {
+            cartItems.innerHTML = '<p class="text-center text-gray-500 py-8">Seu carrinho está vazio</p>';
+            cartSubtotal.textContent = 'R$ 0,00';
+            cartTotal.textContent = 'R$ 0,00';
+            return;
+        }
+        
+        cartItems.innerHTML = '';
+        
+        let subtotal = 0;
+        
+        cart.forEach(item => {
+            const itemTotal = item.price * item.quantity;
+            subtotal += itemTotal;
+            
+            const itemElement = document.createElement('div');
+            itemElement.className = 'flex justify-between items-center border-b border-gray-200 pb-4';
+            itemElement.innerHTML = `
+                <div>
+                    <h4 class="font-semibold">${item.name}</h4>
+                    <p class="text-sm text-gray-500">R$ ${item.price.toFixed(2)}</p>
+                </div>
+                <div class="flex items-center">
+                    <button class="decrease-quantity px-2 py-1 bg-gray-200 rounded-l-lg" data-id="${item.id}">-</button>
+                    <span class="px-3 py-1 bg-gray-100">${item.quantity}</span>
+                    <button class="increase-quantity px-2 py-1 bg-gray-200 rounded-r-lg" data-id="${item.id}">+</button>
+                    <button class="remove-item ml-4 text-red-500" data-id="${item.id}">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+            `;
+            
+            cartItems.appendChild(itemElement);
+        });
+        
+        // Add event listeners to quantity buttons
+        document.querySelectorAll('.decrease-quantity').forEach(button => {
+            button.addEventListener('click', function() {
+                const id = this.getAttribute('data-id');
+                const item = cart.find(item => item.id === id);
+                
+                if (item.quantity > 1) {
+                    item.quantity -= 1;
+                } else {
+                    cart = cart.filter(item => item.id !== id);
+                }
+                
+                updateCartCount();
+                updateCartDisplay();
+            });
+        });
+        
+        document.querySelectorAll('.increase-quantity').forEach(button => {
+            button.addEventListener('click', function() {
+                const id = this.getAttribute('data-id');
+                const item = cart.find(item => item.id === id);
+                item.quantity += 1;
+                
+                updateCartCount();
+                updateCartDisplay();
+            });
+        });
+        
+        document.querySelectorAll('.remove-item').forEach(button => {
+            button.addEventListener('click', function() {
+                const id = this.getAttribute('data-id');
+                cart = cart.filter(item => item.id !== id);
+                
+                updateCartCount();
+                updateCartDisplay();
+            });
+        });
+        
+        cartSubtotal.textContent = `R$ ${subtotal.toFixed(2)}`;
+        cartTotal.textContent = `R$ ${subtotal.toFixed(2)}`;
+    }
+    
+    // Payment method selection
+    document.querySelectorAll('.payment-method').forEach(button => {
+        button.addEventListener('click', function() {
+            // Remove active class from all buttons
+            document.querySelectorAll('.payment-method').forEach(btn => {
+                btn.classList.remove('bg-primary', 'text-white');
+                btn.classList.add('border-gray-300', 'hover:bg-gray-100');
+            });
+            
+            // Add active class to clicked button
+            this.classList.remove('border-gray-300', 'hover:bg-gray-100');
+            this.classList.add('bg-primary', 'text-white');
+        });
+    });
+    
+    // Checkout button
+    document.getElementById('checkoutBtn').addEventListener('click', function() {
+        if (cart.length === 0) {
+            alert('Seu carrinho está vazio!');
+            return;
+        }
+        
+        alert('Compra finalizada com sucesso! Obrigado por comprar na E-Delícias!');
+        cart = [];
+        updateCartCount();
+        updateCartDisplay();
+        cartModal.style.display = 'none';
+    });
+    
+    // Apply coupon
+    document.getElementById('applyCouponBtn').addEventListener('click', function() {
+        const couponCode = document.getElementById('couponCode').value;
+        
+        if (couponCode.toUpperCase() === 'DELICIAS10') {
+            const subtotal = cart.reduce((total, item) => total + (item.price * item.quantity), 0);
+            const discount = subtotal * 0.1;
+            const total = subtotal - discount;
+            
+            document.getElementById('cartTotal').textContent = `R$ ${total.toFixed(2)}`;
+            alert('Cupom aplicado com sucesso! 10% de desconto.');
+        } else {
+            alert('Cupom inválido ou expirado.');
+        }
+    });
+</script>
+</body>
+</html>
